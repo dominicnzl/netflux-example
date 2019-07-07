@@ -8,16 +8,16 @@ import java.util.stream.Collectors;
 
 public class ReactiveStreamsExamples {
 
+    private Flux<String> dogs = Flux.just("Lab", "Golden", "Poedel", "Hotdog", "Terrier");
+
     @Test
     public void simpleStreamExample() {
-        Flux<String> dogs = Flux.just("Lab", "Golden", "Poedel", "Hotdog", "Terrier");
         dogs.toStream()
                 .forEach(System.out::println);
     }
 
     @Test
     public void simpleStreamExample2() {
-        Flux<String> dogs = Flux.just("Lab", "Golden", "Poedel", "Hotdog", "Terrier");
         dogs.subscribe(System.out::println);
     }
 
@@ -27,19 +27,16 @@ public class ReactiveStreamsExamples {
     *  deze done is */
     @Test
     public void simpleStreamExample3() {
-        Flux<String> dogs = Flux.just("Lab", "Golden", "Poedel", "Hotdog", "Terrier");
         dogs.doOnEach(dog -> System.out.println(dog.get())).subscribe();
     }
 
     @Test
     public void simpleStreamExamplesWithSubscriber() {
-        Flux<String> dogs = Flux.just("Lab", "Golden", "Poedel", "Hotdog", "Terrier");
         dogs.subscribe(System.out::println, null, () -> System.out.println("helemaal klaar mee"));
     }
 
     @Test
     public void simpleStreamWithSubscriberConsumers() {
-        Flux<String> dogs = Flux.just("Lab", "Golden", "Poedel", "Hotdog", "Terrier");
 
         //subscriber lambda
         Consumer<String> printer = System.out::println;
@@ -48,7 +45,7 @@ public class ReactiveStreamsExamples {
         Consumer<Throwable> errorhandler = e -> System.out.println("foutje");
 
         //runnable upon complete
-        Runnable allDone = () -> System.out.println("helemaal helemaal klaar");
+        Runnable allDone = () -> System.out.println("helemaal helemaal helemaal klaar");
 
         dogs.subscribe(printer, errorhandler, allDone);
     }
@@ -56,7 +53,6 @@ public class ReactiveStreamsExamples {
     /* Output is: doOnEach_onNext(3)doOnEach_onNext(6)doOnEach_onNext(6)doOnEach_onNext(6)doOnEach_onNext(7)onComplete() */
     @Test
     public void mapStreamExample() {
-        Flux<String> dogs = Flux.just("Lab", "Golden", "Poedel", "Hotdog", "Terrier");
         dogs.map(String::length)
                 .doOnEach(System.out::print)
                 .subscribe();
@@ -67,7 +63,6 @@ public class ReactiveStreamsExamples {
     * Poedel */
     @Test
     public void filterLimitExample() {
-        Flux<String> dogs = Flux.just("Lab", "Golden", "Poedel", "Hotdog", "Terrier");
         dogs.filter(s -> s.length() == 6)
                 .take(2)
                 .subscribe(System.out::println);
@@ -77,7 +72,6 @@ public class ReactiveStreamsExamples {
      * Output: Golden, Poedel, Hotdog */
     @Test
     public void filterLimitJoinExample(){
-        Flux<String> dogs = Flux.just("Lab", "Golden", "Poedel", "Hotdog", "Terrier");
         dogs.filter(s -> s.length() == 6)
                 .take(3)
                 .collect(Collectors.joining(", "))
