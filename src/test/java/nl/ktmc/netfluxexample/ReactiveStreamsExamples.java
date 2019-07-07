@@ -4,6 +4,7 @@ import org.junit.Test;
 import reactor.core.publisher.Flux;
 
 import java.util.function.Consumer;
+import java.util.stream.Collectors;
 
 public class ReactiveStreamsExamples {
 
@@ -59,5 +60,27 @@ public class ReactiveStreamsExamples {
         dogs.map(String::length)
                 .doOnEach(System.out::print)
                 .subscribe();
+    }
+
+    /* .take(2) werkt hier op de Flux zoals .limit(2) op een normale collectie zou werken. Output:
+    * Golden
+    * Poedel */
+    @Test
+    public void filterLimitExample() {
+        Flux<String> dogs = Flux.just("Lab", "Golden", "Poedel", "Hotdog", "Terrier");
+        dogs.filter(s -> s.length() == 6)
+                .take(2)
+                .subscribe(System.out::println);
+    }
+
+    /* Je krijgt hier een Mono terug
+     * Output: Golden, Poedel, Hotdog */
+    @Test
+    public void filterLimitJoinExample(){
+        Flux<String> dogs = Flux.just("Lab", "Golden", "Poedel", "Hotdog", "Terrier");
+        dogs.filter(s -> s.length() == 6)
+                .take(3)
+                .collect(Collectors.joining(", "))
+                .subscribe(System.out::println);
     }
 }
